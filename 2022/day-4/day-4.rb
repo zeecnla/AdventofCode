@@ -2,7 +2,7 @@
 
 # inputs = []
 
-# File.readlines('day-4-input.txt').each do |line|
+# File.readlines('day-4-sample.txt').each do |line|
 #    cleaned_line = line.chomp
 #    small_input  = cleaned_line.split(",")
 
@@ -24,6 +24,12 @@
 #    first = (a..b).to_a
 #    second = (c..d).to_a
 
+#    # .2345678.  2-8
+#    # ..34567..  3-7
+
+#    # first & second = 34567
+
+
 #    count = count+1 if ((first & second ) ==second) || ((first & second ) ==first)
 
 # end
@@ -31,6 +37,7 @@
 # puts count
 
 
+# Part 2
 
 inputs = []
 
