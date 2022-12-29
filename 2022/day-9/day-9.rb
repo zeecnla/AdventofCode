@@ -1,79 +1,110 @@
 require 'pry'
 
-grid = []
-tails_visited = []
+movements = []
 
+count = 0
 
-directions = []
-steps = []
+class Movement
 
-count = 1
+   attr_accessor :step, :direction
 
-File.readlines('day-9-sample.txt').each do |line|
+   def initialize(step, direction)
+     @step = step.to_i
+     @direction = direction
+   end
+
+   def to_s
+      puts "step :#{@step} and direction :#{direction}"
+   end
+end
+
+class Head
+
+   attr_accessor :row, :col
+
+   def initialize(row, col)
+     @row = row
+     @col = col
+   end
+end
+
+class Tail
+    attr_accessor :row, :col
+
+   def initialize(row, col)
+     @row = row
+     @col = col
+   end
+end
+
+File.readlines('day-9-input.txt').each do |line|
    cleaned_line = line.chomp
    items = cleaned_line.split(" ")
 
-   directions.push(items[0])
+   movements.push(Movement.new(items[1],items[0]))
 
-   steps.push(items[1])
 end
 
+current_head_location = [0,0]
+current_tail_location= [0,0]
 
-grid_size = steps.max.to_i
-
-(0...grid_size).each{ |item| grid.push(Array.new(grid_size,"."))}
-
-
-(0...grid_size).each{ |item| tails_visited.push(Array.new(grid_size,0))}
+head_locations = []
+tail_locations = []
 
 
-grid.each{|list| puts list.to_s + "\n"}
+tail_locations.push(current_tail_location)
 
-puts "Talis"
-tails_visited.each{|list| puts list.to_s + "\n"}
+def isAdjacent(row,col, current_tail_location)
+   tail_row = current_tail_location[0]
+   tail_col =current_tail_location[1]
 
-start_row_index = grid.size-1
-start_col_index = 0
+   return true if row == tail_row && col ==tail_col
+   return true if (row-tail_row).abs() <= 1 && (col-tail_col).abs() <=1
+   return false
+end
 
-row = grid.size-1
-col = 0
+movements.each do |movement|
 
-tails_visited[start_row_index][start_col_index] = 1
+   direction = movement.direction
+   step = movement.step
 
-puts "Start Position (#{start_row_index} ,#{start_col_index} )"
+   while (step >= 1) do
 
-stack = []
-stack.push([start_row_index,start_col_index])
+      temp = current_head_location
 
-puts stack.to_s
+      row = temp[0]
+      col = temp[1]
 
-for index in 0 ...directions.size
-
-   direction = directions[index]
-   step = steps[index].to_i
-
-   while (step >= 0) do
-      isAdjacent()
-      grid[row][col] = "H"
       if direction =="R"
          col = col +1
       elsif direction =="U"
          row = row-1
-      elsif direction =="B"
+      elsif direction =="D"
          row = row+1
       elsif direction =="L"
          col = col-1
       end
-      step =step -1
-   end
 
+      current_head_location = [row,col]
+
+      if !isAdjacent(row,col, current_tail_location)
+         tail_locations.push(temp)
+         current_tail_location = temp
+      end
+
+      step = step -1
+   end
 end
 
+puts tail_locations.uniq.to_s
+
+puts tail_locations.uniq.length
 
 
-tails_visited.each {|list| list.each {|item| count = count + item.to_i}}
 
-puts count
+
+
+
 
 
 
